@@ -1,8 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Part 1: Hide tab panels and links when all CMS items are hidden
+  // Part 1: Remove tab panels and links when all CMS items are hidden, or when they're hidden by CMS condition
+  const tabsHidden = document.querySelectorAll(
+    "a.tab-link.w-condition-invisible"
+  );
+  tabsHidden.forEach((tabLink) => {
+    const tabId = tabLink.getAttribute("data-w-tab");
+    const tabPanel = document.querySelector(
+      `.w-tab-pane[data-w-tab="${tabId}"]`
+    );
+    tabLink.remove();
+    tabPanel.remove();
+  });
+
   // Get all tab panels
   const tabPanels = document.querySelectorAll(".w-tab-pane");
-
+  console.log(tabPanels);
   // Process each tab panel
   tabPanels.forEach((panel) => {
     // Get all list items in this panel
@@ -22,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const tabId = panel.getAttribute("data-w-tab");
 
       // Hide the tab panel
-      panel.style.display = "none";
+      panel.remove();
 
       // Find and hide the corresponding tab link
       if (tabId) {
@@ -30,29 +42,20 @@ document.addEventListener("DOMContentLoaded", function () {
           `.w-tab-link[data-w-tab="${tabId}"]`
         );
         if (tabLink) {
-          tabLink.style.display = "none";
+          tabLink.remove();
         }
       }
     }
   });
 
   // Part 2: Handle tab selection when current tab is hidden (converted from jQuery)
-  // Iterate through each tab group
-  const tabGroups = document.querySelectorAll(".w-tabs");
+  // Get first visible tab and make it active
+  const firstVisibleTab = document.querySelector("a.tab-link");
+  firstVisibleTab.classList.add("w--current");
+  firstVisibleTab.tabIndex = 0;
+  firstVisibleTab.setAttribute("aria-selected", "true");
 
-  tabGroups.forEach((tabGroup) => {
-    // Check if the currently active tab is hidden
-    const currentTab = tabGroup.querySelector(".w--current");
-
-    if (currentTab && window.getComputedStyle(currentTab).display === "none") {
-      // Find the first visible tab and click it
-      const firstVisibleTab = tabGroup.querySelector(
-        '[data-w-tab]:not([style*="display: none"])'
-      );
-
-      if (firstVisibleTab) {
-        firstVisibleTab.click();
-      }
-    }
-  });
+  // Get the tab panel and add the active class
+  const tabPanel = document.querySelector(`.w-tab-pane[data-w-tab="${tabId}"]`);
+  tabPanel.classList.add("w--tab-active");
 });
