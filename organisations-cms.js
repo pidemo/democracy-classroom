@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Get all tab panels
   const tabPanels = document.querySelectorAll(".w-tab-pane");
-  console.log(tabPanels);
   // Process each tab panel
   tabPanels.forEach((panel) => {
     // Get all list items in this panel
